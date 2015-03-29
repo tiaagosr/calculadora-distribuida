@@ -5,7 +5,11 @@
 package calculadora.udp;
 
 import calculadora.Conexao;
+import calculadora.Expressao;
+import calculadora.Servidor;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
@@ -21,38 +25,54 @@ public class ConexaoUdp extends Conexao{
     private DatagramPacket pacote;
     private DatagramSocket socket;
     private byte[] dados;
-    private int tipoMensagem;
+    private Expressao tmpMsg;
      
-    ConexaoUdp(ServidorUdp servidor, DatagramPacket pacote, byte[] dados, int tipoMensagem){
+    ConexaoUdp(ServidorUdp servidor, DatagramPacket pacote, byte[] dados){
         this.pacote = pacote;
         this.dados = dados;
         this.socket = servidor.socket;
-        this.tipoMensagem = tipoMensagem;
     }
 
     @Override
     public void run() {
-        
+        processaPacote();
     }
 
     @Override
-    protected void recebePacote() {
+    protected void processaPacote() {
         try {
             ByteArrayInputStream bais = new ByteArrayInputStream(dados);
             ObjectInputStream ois = new ObjectInputStream(bais);
-            try {
-                switch(tipoMensagem){
-                case ServidorUdp.MENSAGEM_NUMERO:
-                    this.tmpMsg = (tipoMensagem) ois.readObject();
-                break;
-                }
-                if(this.tmpMsg != null){
-                    this.server.gui.insertLogTable(this.request.getAddress().getHostName(), tmpMsg.getRequestId());
-                    this.sendResponse(tmpMsg);
-                }
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(ConexaoUdp.class.getName()).log(Level.SEVERE, null, ex);
+            this.tmpMsg = (Expressao) ois.readObject();
+            
+            if(this.tmpMsg != null){
+                float resultadoExpressao = tmpMsg.resultado(Servidor.tmpNumero);
+                this.enviaPacote(resultadoExpressao);
+                System.out.println("Pacote processado e enviado");
+            }else{
+                System.out.println("Pacote corrompido");
             }
+        } catch (IOException ex) {
+            Logger.getLogger(ConexaoUdp.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ConexaoUdp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    @Override
+    protected void enviaPacote(float resultado){
+        try {
+            socket = new DatagramSocket();
+            
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            DataOutputStream dos = new DataOutputStream(outputStream);
+            
+            dos.writeFloat(resultado);
+            byte[] data = outputStream.toByteArray();
+
+            DatagramPacket sendPacket = new DatagramPacket(data, data.length, pacote.getAddress(), socket.getPort());
+            this.socket.send(sendPacket);
+            
         } catch (IOException ex) {
             Logger.getLogger(ConexaoUdp.class.getName()).log(Level.SEVERE, null, ex);
         }

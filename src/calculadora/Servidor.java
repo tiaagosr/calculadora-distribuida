@@ -4,16 +4,12 @@
  */
 package calculadora;
 
-import java.util.ArrayList;
-
 /**
  *
  * @author udesc
  */
 public abstract class Servidor implements Runnable{
-    public int porta = 2020;
-    protected ArrayList<Conexao> conexoes;
+    public static int tmpNumero = 0;
     
-    public static final int MENSAGEM_NUMERO = 0;
-    public static final int MENSAGEM_OPERADOR = 1;
+    protected abstract void iniciaSocket();
 }
