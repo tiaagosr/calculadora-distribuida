@@ -8,7 +8,6 @@ import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 	
 /**
  *
@@ -21,6 +20,7 @@ public class ServidorUdp extends Servidor{
         this.iniciaSocket();
     }
     
+    @Override
     protected void iniciaSocket(){
         try {
             this.socket = new DatagramSocket(Conexao.porta);
@@ -36,8 +36,8 @@ public class ServidorUdp extends Servidor{
             DatagramPacket pacote = new DatagramPacket(dados, dados.length);
             socket.receive(pacote);
             
-            ConexaoUdp novaConexao = new ConexaoUdp(this, pacote, dados);
-            System.out.printf("Novo Pacote de %s\n", pacote.getAddress().getHostAddress());
+            ConexaoUdp novaConexao = new ConexaoUdp(this.socket, pacote, dados);
+            System.out.printf("Novo Pacote de %s com tamanho %d\n", pacote.getAddress().getHostAddress(), pacote.getLength());
             
             Thread tmpThread = new Thread(novaConexao);   
             tmpThread.start();
@@ -46,6 +46,7 @@ public class ServidorUdp extends Servidor{
             Logger.getLogger(ServidorUdp.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
     @Override
     public void run() {
         while(true){

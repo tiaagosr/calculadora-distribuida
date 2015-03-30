@@ -5,24 +5,26 @@
  */
 package calculadora;
 
+import java.io.Serializable;
+
 /**
  *
  * @author tiagosr
  */
-public class Expressao {
+public class Expressao implements Serializable{
     public int operador = 0;
     public Float n1 = null, n2 = null;
     public static final int SOMA = 0, SUBTRACAO = 1, MULTIPLICACAO = 2, DIVISAO = 3; //Variáveis estáticas definindo os operadores
     
-    Expressao(Float n2, int operador){
+    public Expressao(Float n2, int operador){
         defineExpressao(null, operador, n2);
     }
     
-    Expressao(Float n1, int operador, Float n2){
+    public Expressao(Float n1, int operador, Float n2){
         defineExpressao(n1, operador, n2);
     }
     
-    public void defineExpressao(Float n1, int operador, Float n2){
+    private void defineExpressao(Float n1, int operador, Float n2){
        this.n1 = n1;
        this.operador = operador;
        this.n2 = n2;

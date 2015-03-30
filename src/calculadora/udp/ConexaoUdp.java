@@ -26,11 +26,12 @@ public class ConexaoUdp extends Conexao{
     private DatagramSocket socket;
     private byte[] dados;
     private Expressao tmpMsg;
+    
      
-    ConexaoUdp(ServidorUdp servidor, DatagramPacket pacote, byte[] dados){
+    ConexaoUdp(DatagramSocket socket, DatagramPacket pacote, byte[] dados){
         this.pacote = pacote;
         this.dados = dados;
-        this.socket = servidor.socket;
+        this.socket = socket;
     }
 
     @Override
@@ -38,17 +39,18 @@ public class ConexaoUdp extends Conexao{
         processaPacote();
     }
 
-    @Override
     protected void processaPacote() {
         try {
             ByteArrayInputStream bais = new ByteArrayInputStream(dados);
+
             ObjectInputStream ois = new ObjectInputStream(bais);
             this.tmpMsg = (Expressao) ois.readObject();
             
             if(this.tmpMsg != null){
                 float resultadoExpressao = tmpMsg.resultado(Servidor.tmpNumero);
+                System.out.println("Conta: "+tmpMsg.n1+" "+tmpMsg.operador+" "+tmpMsg.n2);
+                Servidor.tmpNumero = resultadoExpressao;
                 this.enviaPacote(resultadoExpressao);
-                System.out.println("Pacote processado e enviado");
             }else{
                 System.out.println("Pacote corrompido");
             }
@@ -59,22 +61,20 @@ public class ConexaoUdp extends Conexao{
         }
     }
     
-    @Override
     protected void enviaPacote(float resultado){
         try {
-            socket = new DatagramSocket();
-            
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             DataOutputStream dos = new DataOutputStream(outputStream);
             
             dos.writeFloat(resultado);
             byte[] data = outputStream.toByteArray();
 
-            DatagramPacket sendPacket = new DatagramPacket(data, data.length, pacote.getAddress(), socket.getPort());
+            DatagramPacket sendPacket = new DatagramPacket(data, data.length, pacote.getAddress(), pacote.getPort());
             this.socket.send(sendPacket);
             
         } catch (IOException ex) {
             Logger.getLogger(ConexaoUdp.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+   
 }
