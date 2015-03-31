@@ -26,10 +26,7 @@ public class Main {
         resultado = cliente.novaConta(5.5F, Expressao.SOMA, 5.5F);
         System.out.println("Resultado:"+resultado);
         
-        resultado = cliente.novaConta(null, Expressao.MULTIPLICACAO, 2F);
-        System.out.println("Resultado:"+resultado);
-        
-        resultado = cliente.novaConta(null, Expressao.SUBTRACAO, 3F);
-        System.out.println("Resultado:"+resultado);
+        Expressao tmp = cliente.requisitaExpressao();
+        System.out.println("Expressao:"+tmp.toString());
     }
 }

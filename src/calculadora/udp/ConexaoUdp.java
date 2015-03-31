@@ -12,6 +12,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.util.logging.Level;
@@ -47,10 +48,17 @@ public class ConexaoUdp extends Conexao{
             this.tmpMsg = (Expressao) ois.readObject();
             
             if(this.tmpMsg != null){
-                float resultadoExpressao = tmpMsg.resultado(Servidor.tmpNumero);
-                System.out.println("Conta: "+tmpMsg.n1+" "+tmpMsg.operador+" "+tmpMsg.n2);
-                Servidor.tmpNumero = resultadoExpressao;
-                this.enviaPacote(resultadoExpressao);
+                
+                if(!this.tmpMsg.requisitaOperando()){ //Enviou expressao a ser resolvida para o servidor
+                    System.out.println("Conta: "+tmpMsg.n1+" "+tmpMsg.operador+" "+tmpMsg.n2);
+                    float resultadoExpressao = tmpMsg.resultado();
+                    Servidor.tmpExpressao = this.tmpMsg;
+                    this.enviaPacote(resultadoExpressao);
+                }else{ //Enviou expressao requisitando operandos temporarios do servidor
+                    System.out.println("Operandos requisitados: "+Servidor.tmpExpressao.toString());
+                    this.enviaPacote(Servidor.tmpExpressao);
+                }
+                
             }else{
                 System.out.println("Pacote corrompido");
             }
@@ -67,6 +75,22 @@ public class ConexaoUdp extends Conexao{
             DataOutputStream dos = new DataOutputStream(outputStream);
             
             dos.writeFloat(resultado);
+            byte[] data = outputStream.toByteArray();
+
+            DatagramPacket sendPacket = new DatagramPacket(data, data.length, pacote.getAddress(), pacote.getPort());
+            this.socket.send(sendPacket);
+            
+        } catch (IOException ex) {
+            Logger.getLogger(ConexaoUdp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    protected void enviaPacote(Expressao expressao){
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(outputStream);
+            
+            oos.writeObject(expressao);
             byte[] data = outputStream.toByteArray();
 
             DatagramPacket sendPacket = new DatagramPacket(data, data.length, pacote.getAddress(), pacote.getPort());

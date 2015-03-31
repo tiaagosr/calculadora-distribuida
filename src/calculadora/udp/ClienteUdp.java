@@ -12,6 +12,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -52,7 +53,14 @@ public class ClienteUdp extends Cliente{
         
         this.enviaPacote(expressao);
         return this.recebeResultado();
-        //return 0F;
+    }
+    
+    @Override
+    public Expressao requisitaExpressao(){
+        Expressao expressao = new Expressao(0F, Expressao.OPERANDOS, 0F);
+        
+        this.enviaPacote(expressao);
+        return this.recebeExpressao();
     }
     
     protected void enviaPacote(Expressao conta){
@@ -66,7 +74,7 @@ public class ClienteUdp extends Cliente{
             DatagramPacket sendPacket = new DatagramPacket(data, data.length, this.address, Conexao.porta);
             this.socket.send(sendPacket);
         } catch (IOException ex) {
-            Logger.getLogger(ConexaoUdp.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ClienteUdp.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -74,6 +82,7 @@ public class ClienteUdp extends Cliente{
         float resultado = 0;
         byte[] dados = new byte[1024];
         DatagramPacket pacote = new DatagramPacket(dados, dados.length);
+        
         try {
             socket.receive(pacote);
             ByteArrayInputStream bais = new ByteArrayInputStream(dados);
@@ -81,9 +90,29 @@ public class ClienteUdp extends Cliente{
             
             resultado = dis.readFloat();
         } catch (IOException ex) {
-            Logger.getLogger(ConexaoUdp.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ClienteUdp.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         return resultado;
+    }
+    
+    protected Expressao recebeExpressao() {
+        Expressao expressao = null;
+        byte[] dados = new byte[1024];
+        DatagramPacket pacote = new DatagramPacket(dados, dados.length);
+        
+        try {
+            socket.receive(pacote);
+            ByteArrayInputStream bais = new ByteArrayInputStream(dados);
+            ObjectInputStream ois = new ObjectInputStream(bais);
+            
+            expressao = (Expressao) ois.readObject();
+        } catch (IOException ex) {
+            Logger.getLogger(ClienteUdp.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ClienteUdp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return expressao;
     }
 }

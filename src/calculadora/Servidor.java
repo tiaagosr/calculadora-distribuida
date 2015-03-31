@@ -9,7 +9,7 @@ package calculadora;
  * @author udesc
  */
 public abstract class Servidor implements Runnable{
-    public static float tmpNumero = 0F;
+    public static Expressao tmpExpressao = null;
     
     protected abstract void iniciaSocket();
 }

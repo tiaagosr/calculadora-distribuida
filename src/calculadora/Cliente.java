@@ -10,8 +10,8 @@ package calculadora;
  * @author tiagosr
  */
 public abstract class Cliente {
-    public Float n1, n2;
-    public int operacao;
+    Expressao tmpExpressao;
     
     public abstract float novaConta(Float n1, int operacao, Float n2);
+    public abstract Expressao requisitaExpressao();
 }
