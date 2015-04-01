@@ -9,7 +9,6 @@ import calculadora.Expressao;
 import calculadora.Servidor;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -72,9 +71,9 @@ public class ConexaoUdp extends Conexao{
     protected void enviaPacote(float resultado){
         try {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            DataOutputStream dos = new DataOutputStream(outputStream);
+            ObjectOutputStream oos = new ObjectOutputStream(outputStream);
             
-            dos.writeFloat(resultado);
+            oos.writeFloat(resultado);
             byte[] data = outputStream.toByteArray();
 
             DatagramPacket sendPacket = new DatagramPacket(data, data.length, pacote.getAddress(), pacote.getPort());

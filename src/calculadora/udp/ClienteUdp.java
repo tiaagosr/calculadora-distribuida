@@ -28,11 +28,11 @@ import java.util.logging.Logger;
  */
 public class ClienteUdp extends Cliente{
     public DatagramSocket socket;
-    InetAddress address;
+    InetAddress destino;
     
     public ClienteUdp(String endereco) {
         try {
-            address = InetAddress.getByName(endereco);
+            destino = InetAddress.getByName(endereco);
         } catch (UnknownHostException ex) {
             Logger.getLogger(ClienteUdp.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -71,7 +71,7 @@ public class ClienteUdp extends Cliente{
             oos.writeObject(conta);
             byte[] data = outputStream.toByteArray();
 
-            DatagramPacket sendPacket = new DatagramPacket(data, data.length, this.address, Conexao.porta);
+            DatagramPacket sendPacket = new DatagramPacket(data, data.length, this.destino, Conexao.porta);
             this.socket.send(sendPacket);
         } catch (IOException ex) {
             Logger.getLogger(ClienteUdp.class.getName()).log(Level.SEVERE, null, ex);
