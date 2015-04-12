@@ -7,9 +7,13 @@ package calculadora.tcp;
 import calculadora.Conexao;
 import calculadora.Expressao;
 import calculadora.Servidor;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,10 +27,11 @@ public class ConexaoTcp extends Conexao{
     private Expressao tmpMsg;
     private ObjectInputStream ois;
     private ObjectOutputStream oos;
-    
+    private InetAddress peer;
      
-    ConexaoTcp(Socket socket){
+    ConexaoTcp(Socket socket, InetAddress peer){
         this.socket = socket;
+        this.peer = peer;
     }
 
     @Override
@@ -48,14 +53,23 @@ public class ConexaoTcp extends Conexao{
             this.tmpMsg = (Expressao) ois.readObject();
             
             if(this.tmpMsg != null){
-                if(!this.tmpMsg.requisitaOperando()){ //Enviou expressao a ser resolvida para o servidor
-                    System.out.println("Conta: "+tmpMsg.n1+" "+tmpMsg.operador+" "+tmpMsg.n2);
-                    float resultadoExpressao = tmpMsg.resultado();
-                    Servidor.tmpExpressao = this.tmpMsg;
-                    this.enviaPacote(resultadoExpressao);
-                }else{ //Enviou expressao requisitando operandos temporarios do servidor
-                    System.out.println("Operandos requisitados: "+Servidor.tmpExpressao.toString());
-                    this.enviaPacote(Servidor.tmpExpressao);
+                switch(this.tmpMsg.operador){
+                    case Expressao.OPERANDOS: 
+                        System.out.println("Operandos requisitados: "+Servidor.tmpExpressao.toString());
+                        this.enviaPacote(Servidor.tmpExpressao);
+                    break;
+                        
+                    case Expressao.SINCRONIZACAO:
+                        Servidor.tmpExpressao = this.tmpMsg;
+                    break;
+                        
+                    default: //Enviou expressao a ser resolvida para o servidor
+                        System.out.println("Conta: "+tmpMsg.n1+" "+tmpMsg.operador+" "+tmpMsg.n2);
+                        float resultadoExpressao = tmpMsg.resultado();
+                        Servidor.tmpExpressao = this.tmpMsg;
+                        this.sincroniza();
+                        this.enviaPacote(resultadoExpressao);
+                    break;
                 }
                 
             }else{
@@ -64,6 +78,29 @@ public class ConexaoTcp extends Conexao{
         } catch (IOException ex) {
             Logger.getLogger(ConexaoTcp.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ConexaoTcp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    protected void sincroniza(){
+        try {
+            DatagramSocket socket = new DatagramSocket();
+            int operacaoTmp = this.tmpMsg.operador;
+            
+            this.tmpMsg.operador = Expressao.SINCRONIZACAO;
+            
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(outputStream);
+            
+            oos.writeObject(this.tmpMsg);
+            byte[] data = outputStream.toByteArray();
+
+            DatagramPacket sendPacket = new DatagramPacket(data, data.length, this.peer, Conexao.porta);
+            socket.send(sendPacket);
+            
+            this.tmpMsg.operador = operacaoTmp;
+            socket.close();
+        } catch (IOException ex) {
             Logger.getLogger(ConexaoTcp.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

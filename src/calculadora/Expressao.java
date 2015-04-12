@@ -14,7 +14,7 @@ import java.io.Serializable;
 public class Expressao implements Serializable{
     public int operador = 0;
     public float n1 = 0, n2 = 0;
-    public static final int SOMA = 0, SUBTRACAO = 1, MULTIPLICACAO = 2, DIVISAO = 3, OPERANDOS = 4; //Variáveis estáticas definindo os operadores
+    public static final int SOMA = 0, SUBTRACAO = 1, MULTIPLICACAO = 2, DIVISAO = 3, OPERANDOS = 4, SINCRONIZACAO = 5; //Variáveis estáticas definindo os operadores
     
     public Expressao(Float n1, int operador, Float n2){
         defineExpressao(n1, operador, n2);

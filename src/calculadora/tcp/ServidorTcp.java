@@ -3,8 +3,10 @@ package calculadora.tcp;
 import calculadora.Conexao;
 import calculadora.Servidor;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 	
@@ -14,9 +16,15 @@ import java.util.logging.Logger;
  */
 public class ServidorTcp extends Servidor{
     private ServerSocket socket;
+    private InetAddress peerServer;
     
-    public ServidorTcp() { 
+    public ServidorTcp(String endereco) { 
         this.iniciaSocket();
+        try {
+            peerServer = InetAddress.getByName(endereco);
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(ServidorTcp.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     @Override
@@ -32,7 +40,7 @@ public class ServidorTcp extends Servidor{
         try {
             Socket tmpSocket = this.socket.accept();
             
-            ConexaoTcp novaConexao = new ConexaoTcp(tmpSocket);
+            ConexaoTcp novaConexao = new ConexaoTcp(tmpSocket, this.peerServer);
             System.out.println("Novo socket com endereco "+tmpSocket.getInetAddress().getHostAddress());
             
             Thread tmpThread = new Thread(novaConexao);   

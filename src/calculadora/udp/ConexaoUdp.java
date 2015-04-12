@@ -14,6 +14,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,12 +28,13 @@ public class ConexaoUdp extends Conexao{
     private DatagramSocket socket;
     private byte[] dados;
     private Expressao tmpMsg;
-    
+    private InetAddress peer;
      
-    ConexaoUdp(DatagramSocket socket, DatagramPacket pacote, byte[] dados){
+    ConexaoUdp(DatagramSocket socket, DatagramPacket pacote, byte[] dados, InetAddress peer){
         this.pacote = pacote;
         this.dados = dados;
         this.socket = socket;
+        this.peer = peer;
     }
 
     @Override
@@ -47,17 +50,22 @@ public class ConexaoUdp extends Conexao{
             this.tmpMsg = (Expressao) ois.readObject();
             
             if(this.tmpMsg != null){
-                
-                if(!this.tmpMsg.requisitaOperando()){ //Enviou expressao a ser resolvida para o servidor
-                    System.out.println("Conta: "+tmpMsg.n1+" "+tmpMsg.operador+" "+tmpMsg.n2);
-                    float resultadoExpressao = tmpMsg.resultado();
-                    Servidor.tmpExpressao = this.tmpMsg;
-                    this.enviaPacote(resultadoExpressao);
-                }else{ //Enviou expressao requisitando operandos temporarios do servidor
-                    System.out.println("Operandos requisitados: "+Servidor.tmpExpressao.toString());
-                    this.enviaPacote(Servidor.tmpExpressao);
+                switch(this.tmpMsg.operador){
+                    case Expressao.OPERANDOS: //Enviou expressao requisitando operandos temporarios do servidor
+                        System.out.println("Operandos requisitados: "+Servidor.tmpExpressao.toString());
+                        this.enviaPacote(Servidor.tmpExpressao);
+                    break;
+                    case Expressao.SINCRONIZACAO:
+                        Servidor.tmpExpressao = this.tmpMsg;
+                    break;
+                    default: //Enviou expressao a ser resolvida para o servidor
+                        System.out.println("Conta: "+tmpMsg.n1+" "+tmpMsg.operador+" "+tmpMsg.n2);
+                        float resultadoExpressao = tmpMsg.resultado();
+                        Servidor.tmpExpressao = this.tmpMsg;
+                        this.sincroniza();
+                        this.enviaPacote(resultadoExpressao);
+                    break;
                 }
-                
             }else{
                 System.out.println("Pacote corrompido");
             }
@@ -79,6 +87,24 @@ public class ConexaoUdp extends Conexao{
             DatagramPacket sendPacket = new DatagramPacket(data, data.length, pacote.getAddress(), pacote.getPort());
             this.socket.send(sendPacket);
             
+        } catch (IOException ex) {
+            Logger.getLogger(ConexaoUdp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    protected void sincroniza(){
+        try {
+            int operacaoTmp = this.tmpMsg.operador;
+            
+            this.tmpMsg.operador = Expressao.SINCRONIZACAO;
+            Socket socket = new Socket(this.peer, Conexao.porta);
+            ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+            
+            oos.writeObject(this.tmpMsg);
+            oos.flush();
+            
+            this.tmpMsg.operador = operacaoTmp;
+            socket.close();
         } catch (IOException ex) {
             Logger.getLogger(ConexaoUdp.class.getName()).log(Level.SEVERE, null, ex);
         }

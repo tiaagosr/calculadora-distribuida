@@ -5,7 +5,9 @@ import calculadora.Servidor;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 	
@@ -15,9 +17,15 @@ import java.util.logging.Logger;
  */
 public class ServidorUdp extends Servidor{
     public DatagramSocket socket;
+    private InetAddress peerServer;
     
-    public ServidorUdp() { 
+    public ServidorUdp(String endereco) { 
         this.iniciaSocket();
+        try {
+            peerServer = InetAddress.getByName(endereco);
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(ServidorUdp.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     @Override
@@ -36,7 +44,7 @@ public class ServidorUdp extends Servidor{
             DatagramPacket pacote = new DatagramPacket(dados, dados.length);
             socket.receive(pacote);
             
-            ConexaoUdp novaConexao = new ConexaoUdp(this.socket, pacote, dados);
+            ConexaoUdp novaConexao = new ConexaoUdp(this.socket, pacote, dados, this.peerServer);
             System.out.printf("Novo Pacote de %s com tamanho %d\n", pacote.getAddress().getHostAddress(), pacote.getLength());
             
             Thread tmpThread = new Thread(novaConexao);   
