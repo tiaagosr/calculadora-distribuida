@@ -86,9 +86,9 @@ public class ClienteUdp extends Cliente{
         try {
             socket.receive(pacote);
             ByteArrayInputStream bais = new ByteArrayInputStream(dados);
-            DataInputStream dis = new DataInputStream(bais);
+            DataInputStream ois = new DataInputStream(bais);
             
-            resultado = dis.readFloat();
+            resultado = ois.readFloat();
         } catch (IOException ex) {
             Logger.getLogger(ClienteUdp.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -15,8 +15,7 @@ public class Inicial extends javax.swing.JFrame {
      */
     public Inicial() {
         initComponents();
-        this.buttonGroup1.add(this.radioTcp);
-        this.buttonGroup1.add(this.radioUdp);
+        this.radioTcp.setSelected(true);
     }
 
     /**
@@ -46,6 +45,7 @@ public class Inicial extends javax.swing.JFrame {
             }
         });
 
+        buttonGroup1.add(radioTcp);
         radioTcp.setText("Tcp");
         radioTcp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -53,6 +53,7 @@ public class Inicial extends javax.swing.JFrame {
             }
         });
 
+        buttonGroup1.add(radioUdp);
         radioUdp.setText("Udp");
         radioUdp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -143,7 +144,7 @@ public class Inicial extends javax.swing.JFrame {
 
     private void btnOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOkActionPerformed
         int tcp = 0;
-        if(buttonGroup1.getSelection().getActionCommand() == "Tcp"){
+        if(radioTcp.isSelected()){
             tcp = 1;
         }
         Interface janela = new Interface(this.txtHost.getText(), tcp);

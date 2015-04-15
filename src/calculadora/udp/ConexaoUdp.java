@@ -9,6 +9,7 @@ import calculadora.Expressao;
 import calculadora.Servidor;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -62,8 +63,8 @@ public class ConexaoUdp extends Conexao{
                         System.out.println("Conta: "+tmpMsg.n1+" "+tmpMsg.operador+" "+tmpMsg.n2);
                         float resultadoExpressao = tmpMsg.resultado();
                         Servidor.tmpExpressao = this.tmpMsg;
-                        this.sincroniza();
                         this.enviaPacote(resultadoExpressao);
+                        this.sincroniza();
                     break;
                 }
             }else{
@@ -79,7 +80,7 @@ public class ConexaoUdp extends Conexao{
     protected void enviaPacote(float resultado){
         try {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            ObjectOutputStream oos = new ObjectOutputStream(outputStream);
+            DataOutputStream oos = new DataOutputStream(outputStream);
             
             oos.writeFloat(resultado);
             byte[] data = outputStream.toByteArray();

@@ -37,6 +37,7 @@ public class ConexaoTcp extends Conexao{
     @Override
     public void run() {
         try {
+            System.out.println("Nova conexão!");
             this.ois = new ObjectInputStream(socket.getInputStream());
             this.oos = new ObjectOutputStream(socket.getOutputStream());
             while(true){

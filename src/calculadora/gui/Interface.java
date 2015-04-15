@@ -322,6 +322,7 @@ public class Interface extends javax.swing.JFrame {
 
     private void igualActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_igualActionPerformed
         if (!mais.isEnabled()) {
+            this.defineN2(this.visor.getText());
             if (valor2 == 0 && this.operacao == Expressao.DIVISAO) {
                 visor.setText("Inválido");
                 erro(true);
@@ -330,10 +331,11 @@ public class Interface extends javax.swing.JFrame {
                 ativarBotoes(true);
                 Expressao tmpExpressao = new Expressao((float)this.valor1, operacao, (float)this.valor2);
 
-                //System.out.println("Numero 1:" + pkt.getvalor1());
-                //System.out.println("Numero 2:" + pkt.getvalor2());
-                //System.out.println("Operação:" + pkt.getOperacao());
+                System.out.println("Numero 1:" + (float) this.valor1);
+                System.out.println("Numero 2:" + (float) this.valor2);
+                System.out.println("Operação:" + operacao);
                 float resultado = this.cliente.novaConta((float)this.valor1, operacao, (float)this.valor2);
+                System.out.println("Resultado: "+resultado);
                 visor.setText(String.valueOf(resultado));
                 this.resultado = true;
             }

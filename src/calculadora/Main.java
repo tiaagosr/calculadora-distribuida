@@ -21,7 +21,7 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Main.InicializaUdp();
+        Main.InicializaTcp();
         
         Thread tmpThread = new Thread(Main.servidor);
         tmpThread.start();
@@ -32,11 +32,9 @@ public class Main {
     
     public static void InicializaTcp(){
         Main.servidor = new ServidorTcp(Main.destino);
-        Main.cliente = new ClienteTcp(Main.destino);
     }
     
     public static void InicializaUdp(){
         Main.servidor = new ServidorUdp(Main.destino);
-        Main.cliente = new ClienteUdp(Main.destino);
     }
 }
