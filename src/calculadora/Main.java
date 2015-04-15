@@ -4,6 +4,7 @@
  */
 package calculadora;
 
+import calculadora.gui.Inicial;
 import calculadora.tcp.ClienteTcp;
 import calculadora.tcp.ServidorTcp;
 import calculadora.udp.ClienteUdp;
@@ -24,13 +25,9 @@ public class Main {
         
         Thread tmpThread = new Thread(Main.servidor);
         tmpThread.start();
-        float resultado;
-        
-        resultado = cliente.novaConta(5.5F, Expressao.SOMA, 5.5F);
-        System.out.println("Resultado:"+resultado);
-        
-        Expressao tmp = cliente.requisitaExpressao();
-        System.out.println("Expressao:"+tmp.toString());
+
+        Inicial janela = new Inicial();
+        janela.setVisible(true);
     }
     
     public static void InicializaTcp(){
