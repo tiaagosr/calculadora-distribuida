@@ -58,6 +58,7 @@ public class ConexaoUdp extends Conexao{
                     break;
                     case Expressao.SINCRONIZACAO:
                         Servidor.tmpExpressao = this.tmpMsg;
+                        System.out.println("Sincronização realizada!");
                     break;
                     default: //Enviou expressao a ser resolvida para o servidor
                         System.out.println("Conta: "+tmpMsg.n1+" "+tmpMsg.operador+" "+tmpMsg.n2);

@@ -28,6 +28,7 @@ public class ConexaoTcp extends Conexao{
     private ObjectInputStream ois;
     private ObjectOutputStream oos;
     private InetAddress peer;
+    private boolean conectado;
      
     ConexaoTcp(Socket socket, InetAddress peer){
         this.socket = socket;
@@ -40,11 +41,13 @@ public class ConexaoTcp extends Conexao{
             System.out.println("Nova conexão!");
             this.ois = new ObjectInputStream(socket.getInputStream());
             this.oos = new ObjectOutputStream(socket.getOutputStream());
-            while(true){
+            conectado = true;
+            while(conectado){
                 recebePacote();
             }
         } catch (IOException ex) {
             Logger.getLogger(ConexaoTcp.class.getName()).log(Level.SEVERE, null, ex);
+            conectado = false;
         }
         
     }
@@ -62,6 +65,7 @@ public class ConexaoTcp extends Conexao{
                         
                     case Expressao.SINCRONIZACAO:
                         Servidor.tmpExpressao = this.tmpMsg;
+                        System.out.println("Sincronização realizada!");
                     break;
                         
                     default: //Enviou expressao a ser resolvida para o servidor
@@ -78,6 +82,7 @@ public class ConexaoTcp extends Conexao{
             }
         } catch (IOException ex) {
             Logger.getLogger(ConexaoTcp.class.getName()).log(Level.SEVERE, null, ex);
+            conectado = false;
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(ConexaoTcp.class.getName()).log(Level.SEVERE, null, ex);
         }

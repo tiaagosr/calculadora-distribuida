@@ -4,6 +4,10 @@
  */
 package calculadora.gui;
 
+import calculadora.Servidor;
+import calculadora.tcp.ServidorTcp;
+import calculadora.udp.ServidorUdp;
+
 /**
  *
  * @author udesc
@@ -16,6 +20,7 @@ public class Inicial extends javax.swing.JFrame {
     public Inicial() {
         initComponents();
         this.radioTcp.setSelected(true);
+        this.radioCliente.setSelected(true);
     }
 
     /**
@@ -27,7 +32,8 @@ public class Inicial extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        buttonGroup1 = new javax.swing.ButtonGroup();
+        groupProtocolo = new javax.swing.ButtonGroup();
+        groupModo = new javax.swing.ButtonGroup();
         txtHost = new javax.swing.JTextField();
         radioTcp = new javax.swing.JRadioButton();
         radioUdp = new javax.swing.JRadioButton();
@@ -35,6 +41,9 @@ public class Inicial extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         btnOk = new javax.swing.JButton();
         btnCancela = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        radioServidor = new javax.swing.JRadioButton();
+        radioCliente = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -45,7 +54,7 @@ public class Inicial extends javax.swing.JFrame {
             }
         });
 
-        buttonGroup1.add(radioTcp);
+        groupProtocolo.add(radioTcp);
         radioTcp.setText("Tcp");
         radioTcp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -53,7 +62,7 @@ public class Inicial extends javax.swing.JFrame {
             }
         });
 
-        buttonGroup1.add(radioUdp);
+        groupProtocolo.add(radioUdp);
         radioUdp.setText("Udp");
         radioUdp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -72,10 +81,28 @@ public class Inicial extends javax.swing.JFrame {
             }
         });
 
-        btnCancela.setText("cancelar");
+        btnCancela.setText("Cancelar");
         btnCancela.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCancelaActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setText("Modo");
+
+        groupModo.add(radioServidor);
+        radioServidor.setText("Servidor");
+        radioServidor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                radioServidorActionPerformed(evt);
+            }
+        });
+
+        groupModo.add(radioCliente);
+        radioCliente.setText("Cliente");
+        radioCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                radioClienteActionPerformed(evt);
             }
         });
 
@@ -83,7 +110,7 @@ public class Inicial extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -92,15 +119,21 @@ public class Inicial extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnOk, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(26, 26, 26)
-                        .addComponent(radioTcp)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(radioUdp))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtHost))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel3))
+                        .addGap(26, 26, 26)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(radioTcp)
+                            .addComponent(radioServidor))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(txtHost, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(radioUdp)
+                            .addComponent(radioCliente))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -116,7 +149,13 @@ public class Inicial extends javax.swing.JFrame {
                         .addComponent(radioTcp)
                         .addComponent(radioUdp))
                     .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
+                .addGap(34, 34, 34)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(radioServidor)
+                        .addComponent(radioCliente)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnOk)
                     .addComponent(btnCancela))
@@ -147,51 +186,41 @@ public class Inicial extends javax.swing.JFrame {
         if(radioTcp.isSelected()){
             tcp = 1;
         }
-        Interface janela = new Interface(this.txtHost.getText(), tcp);
-        janela.setVisible(true);
+        if(radioCliente.isSelected()){
+            Interface janela = new Interface(this.txtHost.getText(), tcp);
+            janela.setVisible(true);
+        }else{
+            Servidor servidor;
+            if(tcp == 1){
+                servidor = new ServidorTcp(this.txtHost.getText());
+            }else{
+                servidor = new ServidorUdp(this.txtHost.getText());
+            }
+            
+            Thread tmpThread = new Thread(servidor);
+            tmpThread.start();
+        }
         this.setVisible(false);
     }//GEN-LAST:event_btnOkActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Inicial.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Inicial.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Inicial.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Inicial.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void radioServidorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioServidorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_radioServidorActionPerformed
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Inicial().setVisible(true);
-            }
-        });
-    }
+    private void radioClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioClienteActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_radioClienteActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancela;
     private javax.swing.JButton btnOk;
-    private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.ButtonGroup groupModo;
+    private javax.swing.ButtonGroup groupProtocolo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JRadioButton radioCliente;
+    private javax.swing.JRadioButton radioServidor;
     private javax.swing.JRadioButton radioTcp;
     private javax.swing.JRadioButton radioUdp;
     private javax.swing.JTextField txtHost;

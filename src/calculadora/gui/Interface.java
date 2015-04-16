@@ -8,6 +8,7 @@ import calculadora.Cliente;
 import calculadora.Expressao;
 import calculadora.tcp.ClienteTcp;
 import calculadora.udp.ClienteUdp;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -77,12 +78,9 @@ public class Interface extends javax.swing.JFrame {
         nove = new javax.swing.JButton();
         um = new javax.swing.JButton();
         zero = new javax.swing.JButton();
-        divide = new javax.swing.JButton();
-        multiplica = new javax.swing.JButton();
         ver = new javax.swing.JPanel();
         visor = new javax.swing.JLabel();
         btnHistorico = new javax.swing.JButton();
-        menos = new javax.swing.JButton();
         cinco = new javax.swing.JButton();
         seis = new javax.swing.JButton();
         sete = new javax.swing.JButton();
@@ -93,6 +91,9 @@ public class Interface extends javax.swing.JFrame {
         quatro = new javax.swing.JButton();
         del = new javax.swing.JButton();
         limpa = new javax.swing.JButton();
+        multiplica = new javax.swing.JButton();
+        menos = new javax.swing.JButton();
+        divide = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -124,20 +125,6 @@ public class Interface extends javax.swing.JFrame {
             }
         });
 
-        divide.setText("/");
-        divide.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                divideActionPerformed(evt);
-            }
-        });
-
-        multiplica.setText("*");
-        multiplica.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                multiplicaActionPerformed(evt);
-            }
-        });
-
         ver.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         javax.swing.GroupLayout verLayout = new javax.swing.GroupLayout(ver);
@@ -155,13 +142,6 @@ public class Interface extends javax.swing.JFrame {
         btnHistorico.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnHistoricoActionPerformed(evt);
-            }
-        });
-
-        menos.setText("-");
-        menos.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menosActionPerformed(evt);
             }
         });
 
@@ -230,6 +210,27 @@ public class Interface extends javax.swing.JFrame {
             }
         });
 
+        multiplica.setText("*");
+        multiplica.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                multiplicaActionPerformed(evt);
+            }
+        });
+
+        menos.setText("-");
+        menos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menosActionPerformed(evt);
+            }
+        });
+
+        divide.setText("/");
+        divide.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                divideActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -239,43 +240,45 @@ public class Interface extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(ver, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(limpa, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(12, 12, 12)
-                        .addComponent(del, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(sete)
-                        .addGap(6, 6, 6)
-                        .addComponent(oito)
-                        .addGap(6, 6, 6)
-                        .addComponent(nove)
-                        .addGap(6, 6, 6)
-                        .addComponent(mais))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(quatro)
-                        .addGap(6, 6, 6)
-                        .addComponent(cinco)
-                        .addGap(6, 6, 6)
-                        .addComponent(seis)
-                        .addGap(6, 6, 6)
-                        .addComponent(menos, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(um)
                             .addComponent(zero))
                         .addGap(6, 6, 6)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(dois)
-                            .addComponent(divide, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(6, 6, 6)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tres)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(1, 1, 1)
-                                .addComponent(multiplica)))
-                        .addGap(6, 6, 6)
+                                .addComponent(dois)
+                                .addGap(8, 8, 8)
+                                .addComponent(tres)
+                                .addGap(7, 7, 7))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(multiplica)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(divide)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                         .addComponent(igual))
-                    .addComponent(btnHistorico))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnHistorico)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(limpa, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(12, 12, 12)
+                        .addComponent(del, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                            .addComponent(quatro)
+                            .addGap(6, 6, 6)
+                            .addComponent(cinco)
+                            .addGap(6, 6, 6)
+                            .addComponent(seis)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(menos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                            .addComponent(sete)
+                            .addGap(6, 6, 6)
+                            .addComponent(oito)
+                            .addGap(6, 6, 6)
+                            .addComponent(nove)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(mais))))
+                .addContainerGap(69, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -290,31 +293,31 @@ public class Interface extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(sete)
                     .addComponent(oito)
-                    .addComponent(nove)
-                    .addComponent(mais))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(nove)
+                        .addComponent(mais)))
                 .addGap(6, 6, 6)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(quatro)
                     .addComponent(cinco)
-                    .addComponent(seis)
-                    .addComponent(menos))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(seis)
+                        .addComponent(menos)))
                 .addGap(6, 6, 6)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(um)
                         .addGap(6, 6, 6)
-                        .addComponent(zero))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(dois)
-                        .addGap(6, 6, 6)
-                        .addComponent(divide))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(tres)
-                        .addGap(6, 6, 6)
-                        .addComponent(multiplica))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(zero)
+                            .addComponent(multiplica)
+                            .addComponent(divide)))
+                    .addComponent(dois)
+                    .addComponent(tres)
                     .addComponent(igual, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(6, 6, 6)
-                .addComponent(btnHistorico))
+                .addComponent(btnHistorico)
+                .addContainerGap(19, Short.MAX_VALUE))
         );
 
         pack();
@@ -330,10 +333,6 @@ public class Interface extends javax.swing.JFrame {
                 visor.setText("0");
                 ativarBotoes(true);
                 Expressao tmpExpressao = new Expressao((float)this.valor1, operacao, (float)this.valor2);
-
-                System.out.println("Numero 1:" + (float) this.valor1);
-                System.out.println("Numero 2:" + (float) this.valor2);
-                System.out.println("Operação:" + operacao);
                 float resultado = this.cliente.novaConta((float)this.valor1, operacao, (float)this.valor2);
                 System.out.println("Resultado: "+resultado);
                 visor.setText(String.valueOf(resultado));
@@ -369,32 +368,15 @@ public class Interface extends javax.swing.JFrame {
         resultado = false;
     }//GEN-LAST:event_zeroActionPerformed
 
-    private void divideActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_divideActionPerformed
-        this.defineN1(visor.getText());
-        visor.setText("0");
-        ativarBotoes(false);
-        this.operacao = Expressao.DIVISAO;
-    }//GEN-LAST:event_divideActionPerformed
-
-    private void multiplicaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_multiplicaActionPerformed
-        this.defineN1(visor.getText());
-        visor.setText("0");
-        ativarBotoes(false);
-        this.operacao = Expressao.MULTIPLICACAO;
-    }//GEN-LAST:event_multiplicaActionPerformed
-
     private void btnHistoricoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHistoricoActionPerformed
         this.tmpExpressao = this.cliente.requisitaExpressao();
-
-        this.visor.setText(this.tmpExpressao.toString());
+        if(this.tmpExpressao != null){
+            JOptionPane.showMessageDialog(this,
+            "Operandos: "+this.tmpExpressao.n1+" e "+this.tmpExpressao.n2,
+            "Histórico",
+            JOptionPane.WARNING_MESSAGE);
+        }
     }//GEN-LAST:event_btnHistoricoActionPerformed
-
-    private void menosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menosActionPerformed
-        this.defineN1(visor.getText());
-        visor.setText("0");
-        ativarBotoes(false);
-        this.operacao = Expressao.SUBTRACAO;
-    }//GEN-LAST:event_menosActionPerformed
 
     private void cincoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cincoActionPerformed
         String numero = visor.getText();
@@ -477,6 +459,27 @@ public class Interface extends javax.swing.JFrame {
             erro(false);
         }
     }//GEN-LAST:event_limpaActionPerformed
+
+    private void multiplicaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_multiplicaActionPerformed
+        this.defineN1(visor.getText());
+        visor.setText("0");
+        ativarBotoes(false);
+        this.operacao = Expressao.MULTIPLICACAO;
+    }//GEN-LAST:event_multiplicaActionPerformed
+
+    private void menosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menosActionPerformed
+        this.defineN1(visor.getText());
+        visor.setText("0");
+        ativarBotoes(false);
+        this.operacao = Expressao.SUBTRACAO;
+    }//GEN-LAST:event_menosActionPerformed
+
+    private void divideActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_divideActionPerformed
+        this.defineN1(visor.getText());
+        visor.setText("0");
+        ativarBotoes(false);
+        this.operacao = Expressao.DIVISAO;
+    }//GEN-LAST:event_divideActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnHistorico;
